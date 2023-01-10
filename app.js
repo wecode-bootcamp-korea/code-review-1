@@ -38,7 +38,6 @@ app.get('/ping', (req, res) => {
 });
 
 //// Sign up
-
 app.post('/signUp', async (req, res) => {
     const { name, email, password } = req.body;
     const saltRounds = 12;
@@ -57,6 +56,24 @@ app.post('/signUp', async (req, res) => {
 
     res.status(201).json({ data: result[0] });
 });
+
+//// Post
+app.post('/post', async (req, res) => {
+    const { title, postImage, content, userId } = req.body;
+
+    const result = await myDataSource.query(
+        `
+        INSERT INTO posts(
+        title,
+        post_image,
+        content,
+        user_id
+        ) VALUES (?, ?, ?, ?);
+        `,
+        [title, postImage, content, userId]
+    );
+
+    res.status(201).json({ message: 'user Created' });
 
 app.listen(PORT, function () {
     `listening on port ${PORT}`;
