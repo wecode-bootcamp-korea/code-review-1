@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const bcrypt = require('bcrypt');
 
 const { DataSource } = require('typeorm');
 
@@ -34,6 +35,27 @@ app.use(morgan('dev'));
 /// health check
 app.get('/ping', (req, res) => {
     res.json({ message: 'pong' });
+});
+
+//// Sign up
+
+app.post('/signUp', async (req, res) => {
+    const { name, email, password } = req.body;
+    const saltRounds = 12;
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+    console.log(hashPassword);
+    const result = await myDataSource.query(
+        `
+        INSERT INTO users(
+        name,
+        email,
+        password
+        ) VALUES (?, ?, ?);
+        `,
+        [name, email, hashPassword]
+    );
+
+    res.status(201).json({ data: result[0] });
 });
 
 app.listen(PORT, function () {
