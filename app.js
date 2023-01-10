@@ -74,6 +74,7 @@ app.post('/post', async (req, res) => {
     );
 
     res.status(201).json({ message: 'user Created' });
+});
 
 app.listen(PORT, function () {
     `listening on port ${PORT}`;
