@@ -36,6 +36,25 @@ app.get('/ping', (req, res) => {
     res.json({ message: 'pong' });
 });
 
+//// Post
+app.post('/post', async (req, res) => {
+    const { title, postImage, content, userId } = req.body;
+
+    const result = await myDataSource.query(
+        `
+        INSERT INTO posts(
+        title,
+        post_image,
+        content,
+        user_id
+        ) VALUES (?, ?, ?, ?);
+        `,
+        [title, postImage, content, userId]
+    );
+
+    res.status(201).json({ message: 'user Created' });
+});
+
 app.listen(PORT, function () {
     `listening on port ${PORT}`;
 });
