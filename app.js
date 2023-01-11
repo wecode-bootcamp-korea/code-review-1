@@ -38,6 +38,32 @@ app.get('/ping', (req, res) => {
     res.status(200).json({ message: 'pong' });
 });
 
+//// Sign up
+app.post('/signUp', async (req, res) => {
+    const { name, email, password } = req.body;
+
+    const saltRounds = 12;
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+
+    const result = await myDataSource.query(
+        `
+            INSERT INTO users(
+                name,
+                email,
+                password
+            ) VALUES (
+                ?,
+                ?,
+                ?
+            );
+        `,
+        [name, email, hashPassword]
+    );
+    res.status(201).json({ message: 'user Created' });
+});
+
+////Login (bcrypt & jwtToken)
+
 const start = async () => {
     try {
         app.listen(PORT, () => console.log(`server is listening on ${PORT}`));
