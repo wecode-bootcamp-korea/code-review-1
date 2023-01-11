@@ -37,62 +37,6 @@ app.use(morgan('dev'));
 app.get('/ping', (req, res) => {
     res.status(200).json({ message: 'pong' });
 });
-//// Sign up
-app.post('/signUp', async (req, res) => {
-    const { name, email, password } = req.body;
-    const saltRounds = 12;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
-    console.log(hashPassword);
-    const result = await myDataSource.query(
-        `
-        INSERT INTO users(
-        name,
-        email,
-        password
-        ) VALUES (?, ?, ?);
-        `,
-        [name, email, hashPassword]
-    );
-    res.status(201).json({ data: result[0] });
-});
-
-////Login (bcrypt & jwtToken)
-
-//// Post
-
-app.post('/post', async (req, res) => {
-    const { title, postImage, content, userId } = req.body;
-    const result = await myDataSource.query(
-        `
-        INSERT INTO posts(
-        title,
-        post_image,
-        content,
-        user_id
-        ) VALUES (?, ?, ?, ?);
-        `,
-        [title, postImage, content, userId]
-    );
-    res.status(201).json({ message: 'Your post Created' });
-});
-
-//// Inquire all post
-app.get('/post', async (req, res) => {
-    const rows = await myDataSource.query(
-        `
-        SELECT
-        u.id AS userId,
-        p.id AS postId,
-        p.post_image AS postingImageUrl,
-        p.content AS postingContent
-        FROM users u
-        INNER JOIN posts p ON u.id = p.user_id;
-        `,
-        (err, rows) => {
-            res.status(200).json({ data: rows });
-        }
-    );
-});
 
 const start = async () => {
     try {
