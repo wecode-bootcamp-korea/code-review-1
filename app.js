@@ -38,6 +38,55 @@ app.get('/ping', (req, res) => {
     res.status(200).json({ message: 'pong' });
 });
 
+//// Sign up
+app.post('/signUp', async (req, res) => {
+    const { name, email, password } = req.body;
+
+    const saltRounds = 12;
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+
+    const result = await myDataSource.query(
+        `
+            INSERT INTO users(
+                name,
+                email,
+                password
+            ) VALUES (
+                ?,
+                ?,
+                ?
+            );
+        `,
+        [name, email, hashPassword]
+    );
+    res.status(201).json({ message: 'user Created' });
+});
+
+////Login (bcrypt & jwtToken)
+
+//// Posting
+app.post('/post', async (req, res) => {
+    const { title, postImage, content, userId } = req.body;
+
+    const result = await myDataSource.query(
+        `
+                INSERT INTO posts(
+                title,
+                post_image,
+                content,
+                user_id
+            ) VALUES (
+                ?, 
+                ?, 
+                ?, 
+                ?
+            );
+        `,
+        [title, postImage, content, userId]
+    );
+    res.status(201).json({ message: 'posting success!' });
+});
+
 //// Inquire all post
 app.get('/post', async (req, res) => {
     const rows = await myDataSource.query(
