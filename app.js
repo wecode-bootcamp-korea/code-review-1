@@ -47,7 +47,7 @@ app.post('/signUp', async (req, res) => {
 
     const result = await myDataSource.query(
         `
-                INSERT INTO users(
+            INSERT INTO users(
                 name,
                 email,
                 password
@@ -61,6 +61,8 @@ app.post('/signUp', async (req, res) => {
     );
     res.status(201).json({ message: 'user Created' });
 });
+
+////Login (bcrypt & jwtToken)
 
 const start = async () => {
     try {
