@@ -40,7 +40,7 @@ app.get('/ping', (req, res) => {
 
 const start = async () => {
     try {
-        app.listen(3000, () => console.log(`server is listening on ${PORT}`));
+        app.listen(PORT, () => console.log(`server is listening on ${PORT}`));
     } catch (err) {
         console.log(err.message);
     }
