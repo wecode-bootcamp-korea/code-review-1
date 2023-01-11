@@ -47,11 +47,15 @@ app.post('/signUp', async (req, res) => {
 
     const result = await myDataSource.query(
         `
-        INSERT INTO users(
-        name,
-        email,
-        password
-        ) VALUES (?, ?, ?);
+                INSERT INTO users(
+                name,
+                email,
+                password
+            ) VALUES (
+                ?,
+                ?,
+                ?
+            );
         `,
         [name, email, hashPassword]
     );
