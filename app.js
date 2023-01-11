@@ -87,6 +87,24 @@ app.post('/post', async (req, res) => {
     res.status(201).json({ message: 'posting success!' });
 });
 
+//// Inquire all post
+app.get('/post', async (req, res) => {
+    const rows = await myDataSource.query(
+        `
+        SELECT
+        u.id AS userId,
+        p.id AS postId,
+        p.post_image AS postingImageUrl,
+        p.content AS postingContent
+        FROM users u
+        INNER JOIN posts p ON u.id = p.user_id;
+        `,
+        (err, rows) => {
+            res.status(200).json({ data: rows });
+        }
+    );
+});
+
 const start = async () => {
     try {
         app.listen(PORT, () => console.log(`server is listening on ${PORT}`));
