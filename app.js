@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const bcrypt = require('bcrypt');
-const jwtToken = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const { DataSource } = require('typeorm');
 
@@ -63,6 +63,35 @@ app.post('/signUp', async (req, res) => {
 });
 
 ////Login (bcrypt & jwtToken)
+app.post('/signin', async (req, res) => {
+    const { email, password } = req.body;
+
+    const userData = await myDataSource.query(
+        `
+            SELECT
+              *
+            FROM
+                users
+            WHERE
+                email = ?`,
+        [email]
+    );
+
+    if (!userData) {
+        return res.status(401).json({ message: 'invalid User' });
+    }
+
+    const result = await bcrypt.compare(password, userData[0].password);
+
+    if (!result) {
+        return res.status(401).json({ message: 'invalid User' });
+    }
+
+    const payload = { email: process.env.email };
+    const jwtToken = jwt.sign(payload, process.env.secretKey);
+
+    return res.status(200).json({ accessToken: jwtToken });
+});
 
 //// Posting
 app.post('/post', async (req, res) => {
