@@ -41,14 +41,20 @@ app.get('/ping', (req, res) => {
 //// Posting
 app.post('/post', async (req, res) => {
     const { title, postImage, content, userId } = req.body;
+
     const result = await myDataSource.query(
         `
-        INSERT INTO posts(
-        title,
-        post_image,
-        content,
-        user_id
-        ) VALUES (?, ?, ?, ?);
+                INSERT INTO posts(
+                title,
+                post_image,
+                content,
+                user_id
+            ) VALUES (
+                ?, 
+                ?, 
+                ?, 
+                ?
+            );
         `,
         [title, postImage, content, userId]
     );
