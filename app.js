@@ -64,6 +64,29 @@ app.post('/signUp', async (req, res) => {
 
 ////Login (bcrypt & jwtToken)
 
+//// Posting
+app.post('/post', async (req, res) => {
+    const { title, postImage, content, userId } = req.body;
+
+    const result = await myDataSource.query(
+        `
+                INSERT INTO posts(
+                title,
+                post_image,
+                content,
+                user_id
+            ) VALUES (
+                ?, 
+                ?, 
+                ?, 
+                ?
+            );
+        `,
+        [title, postImage, content, userId]
+    );
+    res.status(201).json({ message: 'posting success!' });
+});
+
 const start = async () => {
     try {
         app.listen(PORT, () => console.log(`server is listening on ${PORT}`));
