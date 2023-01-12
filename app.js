@@ -20,37 +20,6 @@ app.get('/ping', (req, res) => {
     res.status(200).json({ message: 'pong' });
 });
 
-////Login (bcrypt & jwtToken)
-app.post('/signin', async (req, res) => {
-    const { email, password } = req.body;
-
-    const userData = await myDataSource.query(
-        `
-            SELECT
-              *
-            FROM
-                users
-            WHERE
-                email = ?`,
-        [email]
-    );
-
-    if (!userData) {
-        return res.status(401).json({ message: 'not Exists Users' });
-    }
-
-    const result = await bcrypt.compare(password, userData[0].password);
-
-    if (!result) {
-        return res.status(401).json({ message: 'incorrect Password' });
-    }
-
-    const payload = { email: process.env.email };
-    const jwtToken = jwt.sign(payload, process.env.secretKey);
-
-    return res.status(200).json({ accessToken: jwtToken });
-});
-
 //// Posting
 app.post('/post', async (req, res) => {
     const { title, postImage, content, userId } = req.body;
