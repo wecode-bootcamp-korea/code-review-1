@@ -10,7 +10,6 @@ const signUp = async (name, email, password) => {
         `,
         [name, email, password]
     );
-    console.log(result);
     return result;
 };
 
