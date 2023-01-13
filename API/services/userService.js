@@ -1,12 +1,12 @@
 const userDao = require('../models/userDao');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const signUp = async (name, email, password) => {
-    const saltRounds = 12;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
+const saltRounds = 12;
 
+//// 회원가입
+const signUp = async (name, email, password) => {
+    const hashPassword = await bcrypt.hash(password, saltRounds);
     await userDao.signUp(name, email, hashPassword);
 };
 
